@@ -14,13 +14,15 @@ export default function Home() {
       {/* HERO */}
       <section aria-labelledby="hero-title" className="relative">
         <div className="mx-auto grid max-w-6xl grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Visual mock */}
+      {/* Visual mock */}
           <div className="order-2 md:order-1">
             <div className="card overflow-hidden p-3">
-              <div className="aspect-[5/4] w-full rounded-xl bg-[color:var(--pb-bg)] grid place-items-center">
-                <div className="text-center">
-                  
-                   </div>
+              <div className="aspect-[5/4] w-full rounded-xl bg-[color:var(--pb-bg)]">
+                <img
+        src=""
+        alt="Imagem de destaque do projeto Passa a Bola"
+        className="w-full h-full object-cover rounded-xl"
+                   />
               </div>
             </div>
           </div>

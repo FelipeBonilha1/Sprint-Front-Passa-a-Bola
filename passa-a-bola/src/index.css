@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Tokens de cor (paleta do projeto) */
+:root{
+  --pb-bg: #0A0A0A;         /* Preto Profundo */
+  --pb-text: #F5F5F5;       /* Branco Gelo */
+  --pb-card: #1F1F1F;       /* Cinza Chumbo */
+  --pb-primary: #FF2E88;    /* Rosa Choque */
+  --pb-accent: #00FF85;     /* Verde Neon */
+}
+
+/* Estilo base do body */
+html, body { height: 100%; }
+body {
+  background: var(--pb-bg);
+  color: var(--pb-text);
+}
+
+/* Helpers */
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition;
+  background: var(--pb-primary);
+  color: #0A0A0A;
+}
+.btn:hover   { filter: brightness(1.1); }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--pb-accent) 60%, white); }
+
+.btn-outline {
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition border;
+  border-color: color-mix(in oklab, var(--pb-text) 40%, transparent);
+  color: var(--pb-text);
+}
+.btn-outline:hover { border-color: var(--pb-accent); color: var(--pb-accent); }
+
+.card {
+  background: var(--pb-card);
+  border: 1px solid color-mix(in oklab, var(--pb-text) 10%, transparent);
+  @apply rounded-2xl shadow-sm;
+}

@@ -1,8 +1,20 @@
 {
+  "name": "passa-a-bola",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "api": "json-server --watch seed/db.json --port 3001",
+    "build": "vite build",
+    "test": "vitest",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "json-server": "^1.0.0-beta.1"
   }
 }

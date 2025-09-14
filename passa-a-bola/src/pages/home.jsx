@@ -19,9 +19,9 @@ export default function Home() {
             <div className="card overflow-hidden p-3">
               <div className="aspect-[5/4] w-full rounded-xl bg-[color:var(--pb-bg)]">
                 <img
-        src=""
-        alt="Imagem de destaque do projeto Passa a Bola"
-        className="w-full h-full object-cover rounded-xl"
+                   src="/images/imagem4.jpg"
+                   alt="Imagem de destaque do projeto Passa a Bola"
+                   className="w-full h-full object-cover rounded-xl"
                    />
               </div>
             </div>

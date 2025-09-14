@@ -11,6 +11,7 @@ import Publish from "./pages/Publish.jsx";
 import Search from "./pages/Search.jsx";
 import Nearby from "./pages/Nearby.jsx";
 import History from "./pages/History.jsx";
+import RequireAuth from "./ui/RequireAuth.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,8 @@ const router = createBrowserRouter([
       { path: "/buscar", element: <Search /> },
       { path: "/perto", element: <Nearby /> },
       { path: "/historico", element: <History /> },
+      { path: "/perfil", element: <RequireAuth><Profile/></RequireAuth> },
+      { path: "/publicar", element: <RequireAuth><Publish/></RequireAuth> },
     ],
   },
 ]);

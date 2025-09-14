@@ -6,7 +6,7 @@ Plataforma acadêmica desenvolvida em **React + Vite + TailwindCSS** para promov
 
 ##  Objetivo
 
-O projeto surgiu na disciplina de **Engenharia de Software** com a ideia de criar uma aplicação semelhante ao app **Apito**, mas voltada para **incentivar o futebol feminino**.  
+O projeto surgiu na disciplina de **Engenharia de Software** com a ideia de criar um site voltada para **incentivar o futebol feminino**.  
 Na primeira sprint criamos o protótipo mobile, e nesta segunda entrega evoluímos para um **site funcional** que contempla landing page e telas principais.
 
 ---
@@ -75,6 +75,23 @@ src/
  ├─ data/         # Dados mockados (jogos, status)
  ├─ index.css     # Estilos com Tailwind e tokens de cor
  ├─ main.jsx      # Entrada principal
+
+
+## 📡 Endpoints da API (json-server)
+
+A API fake é servida pelo `json-server` em [http://localhost:3001](http://localhost:3001).
+
+### Jogos
+- **GET** `/games` → lista todos os jogos
+- **POST** `/games` → cria um novo jogo
+- **GET** `/games/:id` → obtém jogo específico
+- **PUT/PATCH** `/games/:id` → atualiza jogo
+- **DELETE** `/games/:id` → remove jogo
+
+### Usuário
+- **GET** `/me` → retorna dados do usuário logado (mock)
+- **PUT/PATCH** `/me` → atualiza informações do perfil
+
 
 # React + Vite
 

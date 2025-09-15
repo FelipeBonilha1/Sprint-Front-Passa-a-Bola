@@ -54,19 +54,23 @@ Na primeira sprint criamos o protótipo mobile, e nesta segunda entrega evoluím
 
 ```bash
 # clone este repositório
-git clone https://github.com/seu-usuario/passa-a-bola.git
+git clone https://github.com/FelipeBonilha1/Sprint-Front-Passa-a-Bola.git
 
 # acesse a pasta
 cd passa-a-bola
-
+ 
 # instale as dependências
 npm install
 
-# rode em ambiente de desenvolvimento
+# rode a api 
+
+npm run api 
+
+# depois em outro terminal  rode em ambiente de desenvolvimento
 npm run dev
 
 # abra no navegador (normalmente em)
-http://localhost:5173
+http://localhost:5173 e http://localhost:3001
 
 
 src/

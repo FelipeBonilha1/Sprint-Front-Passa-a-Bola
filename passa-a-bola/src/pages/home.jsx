@@ -35,8 +35,8 @@ export default function Home() {
             </p>
 
             <h1 id="hero-title" className="text-4xl/tight sm:text-5xl/tight font-extrabold">
-              Conectando quem tem com quem precisa
-              <span className="block" style={{ color: "var(--pb-primary)" }}>esporte transformando realidades</span>
+              Conectando quem tem com quem precisa.
+              <span className="block" style={{ color: "var(--pb-primary)" }}>Esporte transformando realidades</span>
             </h1>
 
             <p className="mt-4 text-[17px] opacity-90 max-w-prose">

@@ -29,7 +29,8 @@ export default function Shell() {
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <NavLink to="/" className="flex items-center gap-2">
             <span className="inline-grid place-items-center h-9 w-9 rounded-lg"
-              style={{ background: "var(--pb-primary)", color: "#0A0A0A", fontWeight: 800 }}>PB</span>
+              ></span>
+              <img src="/images/imagem6.png" alt="" class="w-8 h-8 rounded-full" />
             <span className="font-semibold tracking-tight">Passa a Bola</span>
           </NavLink>
 

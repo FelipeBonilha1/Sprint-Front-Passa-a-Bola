@@ -20,7 +20,7 @@ body {
 .btn {
   @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition;
   background: var(--pb-primary);
-  color: #0A0A0A;
+  color: #FFFF;
 }
 .btn:hover   { filter: brightness(1.1); }
 .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--pb-accent) 60%, white); }

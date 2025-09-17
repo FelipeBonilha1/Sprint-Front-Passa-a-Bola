@@ -70,8 +70,11 @@ npm run api
 npm run dev
 
 # abra no navegador (normalmente em)
-http://localhost:5173 e http://localhost:3001
+http://localhost:5173 e http://localhost:3001"
 
+#deploy do site 
+
+https://sprint-front-passa-a-bola.vercel.app/
 
 src/
  ├─ pages/        # Telas do sistema (Home, Login, Feed, etc.)

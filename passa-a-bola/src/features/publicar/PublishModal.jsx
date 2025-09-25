@@ -37,7 +37,7 @@ export default function PublishModal({ open, onClose, onSubmit }) {
     try {
       setLoading(true);
 
-      // 🔸 Apenas simula envio (NÃO chama backend)
+      //Apenas simula envio 
       await new Promise((r) => setTimeout(r, 800));
 
       // Devolve dados para o Feed atualizar o estado local
@@ -48,7 +48,7 @@ export default function PublishModal({ open, onClose, onSubmit }) {
       setForm({ titulo: "", arena: "", cidade: "", vagas: "", data: "", hora: "" });
       onClose?.();
 
-      // Feedback simples (troque por seu toast se tiver)
+      // Feedback simples 
       setTimeout(() => alert("Partida publicada (simulado). ✅"), 0);
     } catch {
       setLoading(false);
@@ -69,7 +69,7 @@ export default function PublishModal({ open, onClose, onSubmit }) {
           <label className="text-sm text-gray-300">Título</label>
           <input
             className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-            placeholder="Ex.: Fut das Amigas"
+            placeholder="Ex.: Fut de Quarta"
             value={form.titulo}
             onChange={update("titulo")}
           />

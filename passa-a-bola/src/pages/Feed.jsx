@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Api } from "../services/api";
-import PublishModal from "../features/publicar/PublishModal"; // <- ajuste o caminho se necessário
+import PublishModal from "../features/publicar/PublishModal";
 
 export default function Feed() {
   const [games, setGames] = useState([]);
@@ -28,9 +28,7 @@ export default function Feed() {
     };
   }, []);
 
-  // callback quando o modal enviar com sucesso
   function handleAddGame(payload) {
-    // mapeia campos do modal -> estrutura do feed
     const mapped = {
       id: crypto?.randomUUID?.() || Date.now(),
       title: payload.titulo,
@@ -46,74 +44,77 @@ export default function Feed() {
 
   return (
     <section>
-      {/* Header do feed sempre visível */}
-      <div className="flex items-baseline justify-between mb-4">
-        <h1 className="text-2xl font-extrabold">Jogos públicos</h1>
+      {/* Header responsivo */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold">Jogos públicos</h1>
 
-        <div className="flex items-center gap-3">
+          {/* Ações — DESKTOP */}
+          <div className="hidden sm:flex items-center gap-3">
+            <a
+              href="/buscar"
+              className="text-sm opacity-80 hover:text-[color:var(--pb-accent)]"
+            >
+              Filtrar
+            </a>
+            <button onClick={() => setOpenPublish(true)} className="btn">
+              + Publicar partida
+            </button>
+          </div>
+        </div>
+
+        {/* Ações — MOBILE */}
+        <div className="mt-3 sm:hidden grid grid-cols-2 gap-2">
           <a
             href="/buscar"
-            className="text-sm opacity-80 hover:text-[color:var(--pb-accent)]"
+            className="btn-outline w-full py-2 text-sm text-center"
           >
             Filtrar
           </a>
           <button
             onClick={() => setOpenPublish(true)}
-            className="btn"
-            // se não tiver .btn no projeto, pode usar:
-            // className="rounded-2xl px-4 py-2 bg-pink-500 hover:bg-pink-600 focus-visible:ring focus-visible:ring-pink-300"
+            className="btn w-full py-2 text-sm"
           >
-            + Publicar partida
+            + Publicar
           </button>
         </div>
       </div>
 
-      {/* Estados de carregamento/erro/empty */}
+      {/* Estados */}
       {loading && <p>Carregando jogos…</p>}
       {!loading && err && <p className="text-red-400">Erro: {err}</p>}
       {!loading && !err && games.length === 0 && (
         <p className="opacity-70">Nenhum jogo no momento.</p>
       )}
 
-      {/* Lista */}
+      {/* Lista (cards menores) */}
       {!loading && !err && games.length > 0 && (
-        <div className="grid gap-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {games.map((g) => (
-            <article key={g.id ?? g.title} className="rounded-2xl overflow-hidden card">
-              <div className="aspect-[16/9] w-full bg-black/30">
+            <article key={g.id ?? g.title} className="rounded-xl overflow-hidden card">
+              <div className="aspect-[16/10] w-full bg-black/30">
                 {g.image ? (
-                  <img
-                    src={g.image}
-                    alt={g.title}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={g.image} alt={g.title} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full grid place-items-center opacity-60 text-sm">
+                  <div className="w-full h-full grid place-items-center opacity-60 text-xs">
                     Sem imagem
                   </div>
                 )}
               </div>
 
-              <div className="p-4">
-                <h3 className="font-semibold text-lg">{g.title}</h3>
-                <p className="text-sm opacity-80 mt-1">
-                  {g.arena} • {g.city}
-                </p>
-                <p className="text-sm opacity-80">
-                  ⏰ {g.date} • {g.time}
-                </p>
-                {g.slots && (
-                  <p className="text-sm opacity-80">👥 {g.slots} vagas</p>
-                )}
+              <div className="p-3">
+                <h3 className="font-semibold text-base truncate">{g.title}</h3>
+                <p className="text-xs opacity-80 mt-1">{g.arena} • {g.city}</p>
+                <p className="text-xs opacity-80">⏰ {g.date} • {g.time}</p>
+                {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
 
-                <div className="mt-3 flex gap-2">
-                  <button
-                    className="btn"
-                    onClick={() => alert("Inscrição enviada!")}
-                  >
+                <div className="mt-2 flex gap-2">
+                  <button className="btn px-3 py-1.5 text-sm" onClick={() => alert("Inscrição enviada!")}>
                     Quero jogar!
                   </button>
-                  <button className="btn-outline">Detalhes</button>
+                  <button className="btn-outline px-3 py-1.5 text-sm">
+                    Detalhes
+                  </button>
                 </div>
               </div>
             </article>

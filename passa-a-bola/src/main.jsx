@@ -12,6 +12,7 @@ import Search from "./pages/Search.jsx";
 import Nearby from "./pages/Nearby.jsx";
 import History from "./pages/History.jsx";
 import RequireAuth from "./ui/RequireAuth.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,8 @@ const router = createBrowserRouter([
       { path: "/historico", element: <History /> },
       { path: "/perfil", element: <RequireAuth><Profile/></RequireAuth> },
       { path: "/publicar", element: <RequireAuth><Publish/></RequireAuth> },
+      { path:"/dashboard" ,element: <Dashboard />},
+
     ],
   },
 ]);

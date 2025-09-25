@@ -61,6 +61,8 @@ cd passa-a-bola
  
 # instale as dependências
 npm install
+npm npm i recharts
+
 
 # rode a api 
 

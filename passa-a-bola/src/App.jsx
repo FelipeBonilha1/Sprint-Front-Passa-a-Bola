@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 /** Ícone simples */
 const IconCheck = (props) => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" {...props}>

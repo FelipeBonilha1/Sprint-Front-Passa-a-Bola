@@ -1,4 +1,5 @@
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
+import MobileMenu from "../components/MobileMenu";
 
 const LinkTop = ({ to, children }) => (
   <NavLink
@@ -13,8 +14,6 @@ const LinkTop = ({ to, children }) => (
 );
 
 export default function Shell() {
-  const { pathname } = useLocation();
-
   return (
     <div
       style={{
@@ -24,24 +23,35 @@ export default function Shell() {
         minHeight: "100dvh",
       }}
     >
-      {/* HEADER idêntico ao layout 1 */}
+      {/* HEADER */}
       <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-black/40 border-b border-white/10">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-          <NavLink to="/" className="flex items-center gap-2">
-            <span className="inline-grid place-items-center h-9 w-9 rounded-lg"
-              ></span>
-              <img src="/images/imagem6.png" alt="" class="w-8 h-8 rounded-full" />
+        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
+          {/* Logo / Brand */}
+          <NavLink to="/" className="flex items-center gap-2 whitespace-nowrap">
+            <img src="/images/imagem6.png" alt="Passa a Bola" className="w-8 h-8 rounded-full" />
             <span className="font-semibold tracking-tight">Passa a Bola</span>
           </NavLink>
 
-          <nav className="hidden md:flex items-center gap-6">
+          {/* Navegação central (apenas DESKTOP) */}
+          <nav className="hidden md:flex flex-1 justify-center items-center gap-6">
             <LinkTop to="/feed">Feed</LinkTop>
             <LinkTop to="/buscar">Buscar</LinkTop>
             <LinkTop to="/publicar">Publicar</LinkTop>
+            <LinkTop to="/dashboard">Dashboard</LinkTop>
             <LinkTop to="/perfil">Perfil</LinkTop>
           </nav>
 
-          <NavLink to="/login" className="btn hidden md:inline-flex">Entrar</NavLink>
+          {/* Entrar só no DESKTOP */}
+          <div className="hidden md:block">
+            <NavLink to="/login" className="btn">
+              Entrar
+            </NavLink>
+          </div>
+
+          {/* Menu hambúrguer só no MOBILE */}
+          <div className="flex items-center gap-2 md:hidden">
+            <MobileMenu />
+          </div>
         </div>
       </header>
 
@@ -50,29 +60,13 @@ export default function Shell() {
         <Outlet />
       </main>
 
-      {/* BOTTOM BAR mobile (opcional, mantém o look do layout) */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 md:hidden border-t border-white/10 bg-black/60 backdrop-blur">
-        <div className="mx-auto max-w-6xl grid grid-cols-5">
-          {[
-            { to: "/", label: "Home", emoji: "🏠" },
-            { to: "/feed", label: "Feed", emoji: "🏟️" },
-            { to: "/buscar", label: "Buscar", emoji: "🔍" },
-            { to: "/publicar", label: "Publicar", emoji: "📌" },
-            { to: "/perfil", label: "Perfil", emoji: "👤" },
-          ].map((i) => (
-            <NavLink key={i.to} to={i.to}
-              className={"py-2 text-center text-xs " + (pathname === i.to ? "text-[color:var(--pb-accent)] font-semibold" : "opacity-80")}>
-              <div>{i.emoji}</div>{i.label}
-            </NavLink>
-          ))}
-        </div>
-      </nav>
-
-      {/* FOOTER igual ao layout 1 */}
+      {/* FOOTER */}
       <footer className="border-t border-white/10 py-8 mt-8">
         <div className="mx-auto max-w-6xl px-4 text-sm opacity-80 flex flex-col md:flex-row items-center justify-between gap-2">
           <p>© {new Date().getFullYear()} Passa a Bola. MVP acadêmico.</p>
-          <p>Feito com <span style={{ color: "var(--pb-accent)" }}>Tailwind</span> + React.</p>
+          <p>
+            Feito com <span style={{ color: "var(--pb-accent)" }}>Tailwind</span> + React.
+          </p>
         </div>
       </footer>
     </div>

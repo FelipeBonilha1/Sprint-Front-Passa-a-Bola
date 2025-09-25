@@ -1,7 +1,7 @@
 {
   "games": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Fut de Segunda",
       "arena": "Arena Fênix",
       "city": "São Paulo",
@@ -10,7 +10,7 @@
       "slots": "4/10"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Amigas Craques",
       "arena": "Estrela Norte",
       "city": "São Paulo",
@@ -19,7 +19,7 @@
       "slots": "2/12"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Treino de Sábado",
       "arena": "Quadra Central",
       "city": "Campinas",

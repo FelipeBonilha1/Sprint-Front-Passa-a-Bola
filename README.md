@@ -61,22 +61,17 @@ cd passa-a-bola
  
 # instale as dependências
 npm install
-npm npm i recharts
-
 
 # rode a api 
 
 npm run api 
 
-# depois em outro terminal  rode em ambiente de desenvolvimento
+# depois em outro terminal rode em ambiente de desenvolvimento
 npm run dev
 
 # abra no navegador (normalmente em)
-http://localhost:5173 e http://localhost:3001"
+http://localhost:5173 
 
-#deploy do site 
-
-https://sprint-front-passa-a-bola.vercel.app/
 
 src/
  ├─ pages/        # Telas do sistema (Home, Login, Feed, etc.)
@@ -117,10 +112,9 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 
-
-# Alunos
-Felipe Rodrigues Viana de Andrade – RM: 565341
-Felipe Senteio Bonilha – RM: 562356
-Gabriel Ribeiro Salles de Camargo– RM : 563584
-Joan Ferreira Campos – RM : 562913
-Levi de Jesus da Silva Francelino– RM : 563279
+#Alunos 
+#Felipe Rodrigues Viana de Andrade – RM: 565341
+#Felipe Senteio Bonilha – RM: 562356
+#Gabriel Ribeiro Salles de Camargo– RM : 563584
+#Joan Ferreira Campos – RM : 562913
+#Levi de Jesus da Silva Francelino– RM : 563279

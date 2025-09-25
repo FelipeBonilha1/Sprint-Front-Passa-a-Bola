@@ -1,158 +1,145 @@
-// src/features/publicar/PublishModal.jsx
-import React, { useState } from "react";
-import Modal from "../../ui/Modal";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function PublishModal({ open, onClose, onSubmit }) {
+  const refDialog = useRef(null);
+  const firstFocus = useRef(null);
   const [form, setForm] = useState({
-    titulo: "",
-    arena: "",
-    cidade: "",
-    vagas: "",
-    data: "",
-    hora: "",
+    titulo: "", arena: "", cidade: "", vagas: "", data: "", hora: ""
   });
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState("");
 
-  const update = (k) => (e) => setForm((s) => ({ ...s, [k]: e.target.value }));
-
-  const validate = () => {
-    const e = {};
-    if (!form.titulo.trim()) e.titulo = "Informe o título";
-    if (!form.arena.trim()) e.arena = "Informe a arena/quadra";
-    if (!form.cidade.trim()) e.cidade = "Informe a cidade";
-    if (!form.data.trim()) e.data = "Informe a data";
-    if (!form.hora.trim()) e.hora = "Informe a hora";
-    return e;
-  };
-
-  const handleSubmit = async (ev) => {
-    ev.preventDefault();
-    setServerError("");
-    const e = validate();
-    setErrors(e);
-    if (Object.keys(e).length) return;
-
-    try {
-      setLoading(true);
-
-      //Apenas simula envio 
-      await new Promise((r) => setTimeout(r, 800));
-
-      // Devolve dados para o Feed atualizar o estado local
-      onSubmit?.(form);
-
-      // Reseta/fecha
-      setLoading(false);
-      setForm({ titulo: "", arena: "", cidade: "", vagas: "", data: "", hora: "" });
-      onClose?.();
-
-      // Feedback simples 
-      setTimeout(() => alert("Partida publicada (simulado). ✅"), 0);
-    } catch {
-      setLoading(false);
-      setServerError("Falha ao simular o envio. Tente novamente.");
+  // reset quando abre/fecha
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => firstFocus.current?.focus(), 50);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
-  };
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
+  // ESC e focus-trap (TAB)
+  useEffect(() => {
+    if (!open) return;
+
+    const el = refDialog.current;
+    const focusables = () => {
+      const selectors = [
+        "a[href]", "button:not([disabled])", "textarea",
+        "input", "select", "[tabindex]:not([tabindex='-1'])"
+      ];
+      return Array.from(el.querySelectorAll(selectors.join(",")));
+    };
+
+    function onKey(e) {
+      if (e.key === "Escape") { e.preventDefault(); onClose?.(); }
+      if (e.key === "Tab") {
+        const list = focusables();
+        if (list.length === 0) return;
+        const first = list[0], last = list[list.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  const disabled = useMemo(() => {
+    return !form.titulo || !form.arena || !form.cidade || !form.data || !form.hora;
+  }, [form]);
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setForm((s) => ({ ...s, [name]: value }));
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (disabled) return;
+    onSubmit?.(form);
+    onClose?.();
+  }
+
+  if (!open) return null;
 
   return (
-    <Modal open={open} onClose={onClose} title="Publique sua partida">
-      <form onSubmit={handleSubmit} className="grid gap-4">
-        {serverError ? (
-          <div className="rounded-lg bg-red-500/10 text-red-300 px-3 py-2 text-sm">
-            {serverError}
-          </div>
-        ) : null}
+    <div
+      aria-hidden="false"
+      className="fixed inset-0 z-50 grid place-items-center"
+    >
+      {/* overlay */}
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
-        <div>
-          <label className="text-sm text-gray-300">Título</label>
+      {/* dialog */}
+      <div
+        ref={refDialog}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pub-title"
+        aria-describedby="pub-desc"
+        className="relative mx-4 w-full max-w-xl rounded-2xl border border-white/15 bg-black/70 backdrop-blur p-4 sm:p-6"
+      >
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <h2 id="pub-title" className="text-xl font-semibold">Publique sua partida</h2>
+          <button onClick={onClose} className="btn-outline px-2 py-1" aria-label="Fechar modal">✕</button>
+        </div>
+        <p id="pub-desc" className="text-sm opacity-80 mb-4">
+          Preencha os campos abaixo para publicar.
+        </p>
+
+        <form onSubmit={handleSubmit} className="grid gap-3">
           <input
-            className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-            placeholder="Ex.: Fut de Quarta"
+            ref={firstFocus}
+            name="titulo"
+            placeholder="Título"
             value={form.titulo}
-            onChange={update("titulo")}
+            onChange={handleChange}
+            className="w-full rounded-xl px-3 py-2 bg-white/5 border border-white/15 outline-none focus:ring-2 focus:ring-pink-400/40"
           />
-          {errors.titulo && <p className="mt-1 text-xs text-red-300">{errors.titulo}</p>}
-        </div>
-
-        <div>
-          <label className="text-sm text-gray-300">Arena / Quadra</label>
           <input
-            className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-            placeholder="Ex.: Fênix Arena"
-            value={form.arena}
-            onChange={update("arena")}
+            name="arena" placeholder="Arena / Quadra"
+            value={form.arena} onChange={handleChange}
+            className="w-full rounded-xl px-3 py-2 bg-white/5 border border-white/15 outline-none focus:ring-2 focus:ring-pink-400/40"
           />
-          {errors.arena && <p className="mt-1 text-xs text-red-300">{errors.arena}</p>}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input
+              name="cidade" placeholder="Cidade"
+              value={form.cidade} onChange={handleChange}
+              className="rounded-xl px-3 py-2 bg-white/5 border border-white/15 outline-none focus:ring-2 focus:ring-pink-400/40"
+            />
+            <input
+              name="vagas" placeholder="Vagas (opcional)"
+              value={form.vagas} onChange={handleChange}
+              className="rounded-xl px-3 py-2 bg-white/5 border border-white/15 outline-none focus:ring-2 focus:ring-pink-400/40"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input
+              name="data" placeholder="Data (ex.: 20/09)"
+              value={form.data} onChange={handleChange}
+              className="rounded-xl px-3 py-2 bg-white/5 border border-white/15 outline-none focus:ring-2 focus:ring-pink-400/40"
+            />
+            <input
+              name="hora" placeholder="Hora (ex.: 19:30)"
+              value={form.hora} onChange={handleChange}
+              className="rounded-xl px-3 py-2 bg-white/5 border border-white/15 outline-none focus:ring-2 focus:ring-pink-400/40"
+            />
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm text-gray-300">Cidade</label>
-            <input
-              className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-              placeholder="Ex.: São Paulo"
-              value={form.cidade}
-              onChange={update("cidade")}
-            />
-            {errors.cidade && <p className="mt-1 text-xs text-red-300">{errors.cidade}</p>}
+          <div className="mt-2 flex gap-2 justify-end">
+            <button type="button" onClick={onClose} className="btn-outline px-4 py-2">
+              Cancelar
+            </button>
+            <button type="submit" disabled={disabled} className="btn px-4 py-2 disabled:opacity-50">
+              Publicar
+            </button>
           </div>
-          <div>
-            <label className="text-sm text-gray-300">Vagas (opcional)</label>
-            <input
-              className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-              placeholder="Ex.: 4/10"
-              value={form.vagas}
-              onChange={update("vagas")}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm text-gray-300">Data</label>
-            <input
-              type="text"
-              inputMode="numeric"
-              className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-              placeholder="Ex.: 20/09"
-              value={form.data}
-              onChange={update("data")}
-            />
-            {errors.data && <p className="mt-1 text-xs text-red-300">{errors.data}</p>}
-          </div>
-          <div>
-            <label className="text-sm text-gray-300">Hora</label>
-            <input
-              type="text"
-              inputMode="numeric"
-              className="mt-1 w-full rounded-xl bg-white/5 px-3 py-2 outline-none focus-visible:ring focus-visible:ring-pink-500"
-              placeholder="Ex.: 19:30"
-              value={form.hora}
-              onChange={update("hora")}
-            />
-            {errors.hora && <p className="mt-1 text-xs text-red-300">{errors.hora}</p>}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl px-4 py-2 bg-white/5 hover:bg-white/10 focus-visible:ring focus-visible:ring-pink-500"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-xl px-5 py-2.5 bg-pink-500 hover:bg-pink-600 disabled:opacity-60 focus-visible:ring focus-visible:ring-pink-300"
-          >
-            {loading ? "Publicando..." : "Publicar"}
-          </button>
-        </div>
-      </form>
-    </Modal>
+        </form>
+      </div>
+    </div>
   );
 }

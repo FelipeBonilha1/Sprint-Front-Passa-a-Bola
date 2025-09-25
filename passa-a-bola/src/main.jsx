@@ -1,41 +1,48 @@
-import React from "react";
+// src/main.jsx
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Shell from "./ui/Shell.jsx";      // cabeçalho/rodapé com o MESMO estilo do primeiro layout
-import Home from "./pages/home.jsx";     // a landing igual ao primeiro layout
-import Login from "./pages/Login.jsx";
-import Profile from "./pages/Profile.jsx";
-import Feed from "./pages/Feed.jsx";
-import Publish from "./pages/Publish.jsx";
-import Search from "./pages/Search.jsx";
-import Nearby from "./pages/Nearby.jsx";
-import History from "./pages/History.jsx";
-import RequireAuth from "./ui/RequireAuth.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+
+import Shell from "./ui/Shell.jsx";
+import AppLoader from "./components/AppLoader.jsx";
+import BootSplash from "./components/BootSplash.jsx";
+
+// --- suas páginas lazy (como já deixei antes) ---
+const Home      = lazy(() => import("./pages/home.jsx"));
+const Login     = lazy(() => import("./pages/Login.jsx"));
+const Profile   = lazy(() => import("./pages/Profile.jsx"));
+const Feed      = lazy(() => import("./pages/Feed.jsx"));
+const Publish   = lazy(() => import("./pages/Publish.jsx"));
+const Search    = lazy(() => import("./pages/Search.jsx"));
+const Nearby    = lazy(() => import("./pages/Nearby.jsx"));
+const History   = lazy(() => import("./pages/History.jsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
+const RequireAuth = lazy(() => import("./ui/RequireAuth.jsx"));
 
 const router = createBrowserRouter([
   {
     element: <Shell />,
     children: [
-      { path: "/", element: <Home /> },       // landing do layout original
+      { path: "/", element: <Home /> },
       { path: "/login", element: <Login /> },
-      { path: "/perfil", element: <Profile /> },
       { path: "/feed", element: <Feed /> },
-      { path: "/publicar", element: <Publish /> },
       { path: "/buscar", element: <Search /> },
       { path: "/perto", element: <Nearby /> },
       { path: "/historico", element: <History /> },
-      { path: "/perfil", element: <RequireAuth><Profile/></RequireAuth> },
-      { path: "/publicar", element: <RequireAuth><Publish/></RequireAuth> },
-      { path:"/dashboard" ,element: <Dashboard />},
-
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/perfil", element: <RequireAuth><Profile /></RequireAuth> },
+      { path: "/publicar", element: <RequireAuth><Publish /></RequireAuth> },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Suspense fallback={<AppLoader text="Carregando página…" />}>
+      <BootSplash min={1800}> {/* ⬅️ tempo mínimo do splash */}
+        <RouterProvider router={router} />
+      </BootSplash>
+    </Suspense>
   </React.StrictMode>
 );

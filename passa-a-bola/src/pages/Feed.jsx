@@ -1,31 +1,36 @@
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { Api } from "../services/api";
 import PublishModal from "../features/publicar/PublishModal";
+import { toast } from "../lib/toast";
 
 export default function Feed() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
   const [openPublish, setOpenPublish] = useState(false);
+  const [showFab, setShowFab] = useState(true);
+
+  // direção do scroll (mostra FAB quando sobe)
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setShowFab(y < 64 || y < last);
+      last = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     let alive = true;
     setLoading(true);
-
     Api.listGames()
-      .then((data) => {
-        if (alive) setGames(data || []);
-      })
-      .catch((e) => {
-        if (alive) setErr(e?.message || "Falha ao carregar");
-      })
-      .finally(() => {
-        if (alive) setLoading(false);
-      });
-
-    return () => {
-      alive = false;
-    };
+      .then((data) => { if (alive) setGames(data || []); })
+      .catch((e) => { if (alive) setErr(e?.message || "Falha ao carregar"); })
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
   }, []);
 
   function handleAddGame(payload) {
@@ -40,6 +45,7 @@ export default function Feed() {
       image: null,
     };
     setGames((s) => [mapped, ...s]);
+    toast.success("Partida publicada!");
   }
 
   return (
@@ -51,12 +57,12 @@ export default function Feed() {
 
           {/* Ações — DESKTOP */}
           <div className="hidden sm:flex items-center gap-3">
-            <a
-              href="/buscar"
+            <NavLink
+              to="/buscar"
               className="text-sm opacity-80 hover:text-[color:var(--pb-accent)]"
             >
               Filtrar
-            </a>
+            </NavLink>
             <button onClick={() => setOpenPublish(true)} className="btn">
               + Publicar partida
             </button>
@@ -65,23 +71,32 @@ export default function Feed() {
 
         {/* Ações — MOBILE */}
         <div className="mt-3 sm:hidden grid grid-cols-2 gap-2">
-          <a
-            href="/buscar"
-            className="btn-outline w-full py-2 text-sm text-center"
-          >
+          <NavLink to="/buscar" className="btn-outline w-full py-2 text-sm text-center">
             Filtrar
-          </a>
-          <button
-            onClick={() => setOpenPublish(true)}
-            className="btn w-full py-2 text-sm"
-          >
+          </NavLink>
+          <button onClick={() => setOpenPublish(true)} className="btn w-full py-2 text-sm">
             + Publicar
           </button>
         </div>
       </div>
 
       {/* Estados */}
-      {loading && <p>Carregando jogos…</p>}
+      {loading && (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-xl overflow-hidden card animate-pulse">
+              <div className="aspect-[16/10] bg-white/5" />
+              <div className="p-3 space-y-2">
+                <div className="h-4 bg-white/10 rounded" />
+                <div className="h-3 bg-white/10 rounded w-2/3" />
+                <div className="h-3 bg-white/10 rounded w-1/2" />
+                <div className="h-8 bg-white/10 rounded w-3/4 mt-3" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {!loading && err && <p className="text-red-400">Erro: {err}</p>}
       {!loading && !err && games.length === 0 && (
         <p className="opacity-70">Nenhum jogo no momento.</p>
@@ -94,7 +109,14 @@ export default function Feed() {
             <article key={g.id ?? g.title} className="rounded-xl overflow-hidden card">
               <div className="aspect-[16/10] w-full bg-black/30">
                 {g.image ? (
-                  <img src={g.image} alt={g.title} className="w-full h-full object-cover" />
+                  <img
+                    src={g.image}
+                    alt={g.title}
+                    loading="lazy"
+                    width={1280}
+                    height={800}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="w-full h-full grid place-items-center opacity-60 text-xs">
                     Sem imagem
@@ -109,7 +131,10 @@ export default function Feed() {
                 {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
 
                 <div className="mt-2 flex gap-2">
-                  <button className="btn px-3 py-1.5 text-sm" onClick={() => alert("Inscrição enviada!")}>
+                  <button
+                    className="btn px-3 py-1.5 text-sm"
+                    onClick={() => toast.success("Inscrição enviada!")}
+                  >
                     Quero jogar!
                   </button>
                   <button className="btn-outline px-3 py-1.5 text-sm">
@@ -120,6 +145,18 @@ export default function Feed() {
             </article>
           ))}
         </div>
+      )}
+
+      {/* FAB móvel (+ Publicar) */}
+      {showFab && (
+        <button
+          onClick={() => setOpenPublish(true)}
+          className="md:hidden fixed right-4 bottom-20 z-50 rounded-full px-5 py-3 shadow-lg
+                     bg-[color:var(--pb-accent)] text-black font-semibold"
+          aria-label="Publicar partida"
+        >
+          + Publicar
+        </button>
       )}
 
       {/* Modal de publicação */}

@@ -1,5 +1,9 @@
 import { Outlet, NavLink } from "react-router-dom";
 import MobileMenu from "../components/MobileMenu";
+import AccessibilityBar from "../components/AccessibilityBar"; 
+import Toaster from "../components/Toaster";  
+import { Suspense } from "react";
+import AppLoader from "../components/AppLoader";
 
 const LinkTop = ({ to, children }) => (
   <NavLink
@@ -23,8 +27,12 @@ export default function Shell() {
         minHeight: "100dvh",
       }}
     >
-      {/* HEADER */}
-      <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-black/40 border-b border-white/10">
+      {/* TOP BAR A11Y */}
+      <AccessibilityBar />
+      <Toaster /> 
+
+      {/* HEADER (deslocado 40px para não colidir com a top bar) */}
+      <header className="sticky top-[40px] z-40 backdrop-blur supports-[backdrop-filter]:bg-black/40 border-b border-white/10">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
           {/* Logo / Brand */}
           <NavLink to="/" className="flex items-center gap-2 whitespace-nowrap">
@@ -55,9 +63,11 @@ export default function Shell() {
         </div>
       </header>
 
-      {/* CONTEÚDO */}
-      <main className="mx-auto max-w-6xl px-4 pt-8 pb-24">
-        <Outlet />
+      {/* CONTEÚDO (id="main" para o skip link da barra de acessibilidade) */}
+      <main id="main" className="mx-auto max-w-6xl px-4 pt-8 pb-24">
+        <Suspense fallback={<AppLoader text="Carregando página…" />}>
+    <Outlet />
+  </Suspense>
       </main>
 
       {/* FOOTER */}

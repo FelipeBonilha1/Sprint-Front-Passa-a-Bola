@@ -102,12 +102,18 @@ export default function Feed() {
         <p className="opacity-70">Nenhum jogo no momento.</p>
       )}
 
-      {/* Lista (cards menores) */}
+      {/* Lista (cards menores + profundidade/hover) */}
       {!loading && !err && games.length > 0 && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {games.map((g) => (
-            <article key={g.id ?? g.title} className="rounded-xl overflow-hidden card">
-              <div className="aspect-[16/10] w-full bg-black/30">
+            <article
+              key={g.id ?? g.title}
+              className="group rounded-xl overflow-hidden card transition
+                         ring-1 ring-white/10 hover:ring-[color:var(--pb-accent)]/40
+                         hover:shadow-[0_0_0_1px_rgba(255,43,135,.35),0_20px_40px_-16px_rgba(255,43,135,.25)]
+                         motion-reduce:transition-none"
+            >
+              <div className="relative aspect-[16/10] w-full bg-black/30">
                 {g.image ? (
                   <img
                     src={g.image}
@@ -122,6 +128,8 @@ export default function Feed() {
                     Sem imagem
                   </div>
                 )}
+                {/* overlay de degradê sutil no hover */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
               </div>
 
               <div className="p-3">
@@ -151,8 +159,10 @@ export default function Feed() {
       {showFab && (
         <button
           onClick={() => setOpenPublish(true)}
-          className="md:hidden fixed right-4 bottom-20 z-50 rounded-full px-5 py-3 shadow-lg
-                     bg-[color:var(--pb-accent)] text-black font-semibold"
+          className="md:hidden fixed right-4 bottom-20 z-50 rounded-full px-5 py-3
+                     bg-[color:var(--pb-accent)] text-black font-semibold
+                     shadow-[0_10px_30px_-10px_rgba(255,43,135,.6)]
+                     ring-1 ring-[color:var(--pb-accent)]/40"
           aria-label="Publicar partida"
         >
           + Publicar

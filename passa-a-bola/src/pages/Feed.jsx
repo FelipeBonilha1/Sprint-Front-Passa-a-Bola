@@ -11,6 +11,13 @@ export default function Feed() {
   const [openPublish, setOpenPublish] = useState(false);
   const [showFab, setShowFab] = useState(true);
 
+  // 3 imagens padrão para os cards (altere os caminhos conforme seu projeto)
+  const fallbackImages = [
+    "/images/fut1.jpg",
+    "/images/fut2.jpg",
+    "/images/fut3.jpg",
+  ];
+
   // direção do scroll (mostra FAB quando sobe)
   useEffect(() => {
     let last = window.scrollY;
@@ -42,7 +49,7 @@ export default function Feed() {
       slots: payload.vagas,
       date: payload.data,
       time: payload.hora,
-      image: null,
+      image: null, // se quiser, passe uma URL aqui ao publicar
     };
     setGames((s) => [mapped, ...s]);
     toast.success("Partida publicada!");
@@ -105,53 +112,60 @@ export default function Feed() {
       {/* Lista (cards menores + profundidade/hover) */}
       {!loading && !err && games.length > 0 && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {games.map((g) => (
-            <article
-              key={g.id ?? g.title}
-              className="group rounded-xl overflow-hidden card transition
-                         ring-1 ring-white/10 hover:ring-[color:var(--pb-accent)]/40
-                         hover:shadow-[0_0_0_1px_rgba(255,43,135,.35),0_20px_40px_-16px_rgba(255,43,135,.25)]
-                         motion-reduce:transition-none"
-            >
-              <div className="relative aspect-[16/10] w-full bg-black/30">
-                {g.image ? (
-                  <img
-                    src={g.image}
-                    alt={g.title}
-                    loading="lazy"
-                    width={1280}
-                    height={800}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full grid place-items-center opacity-60 text-xs">
-                    Sem imagem
-                  </div>
-                )}
-                {/* overlay de degradê sutil no hover */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              </div>
+          {games.map((g, idx) => {
+            // usa g.image se existir; senão alterna entre as 3 imagens
+            const imgSrc = g.image || fallbackImages[idx % fallbackImages.length];
 
-              <div className="p-3">
-                <h3 className="font-semibold text-base truncate">{g.title}</h3>
-                <p className="text-xs opacity-80 mt-1">{g.arena} • {g.city}</p>
-                <p className="text-xs opacity-80">⏰ {g.date} • {g.time}</p>
-                {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
-
-                <div className="mt-2 flex gap-2">
-                  <button
-                    className="btn px-3 py-1.5 text-sm"
-                    onClick={() => toast.success("Inscrição enviada!")}
-                  >
-                    Quero jogar!
-                  </button>
-                  <button className="btn-outline px-3 py-1.5 text-sm">
-                    Detalhes
-                  </button>
+            return (
+              <article
+                key={g.id ?? g.title ?? idx}
+                className="group rounded-xl overflow-hidden card transition
+                           ring-1 ring-white/10 hover:ring-[color:var(--pb-accent)]/40
+                           hover:shadow-[0_0_0_1px_rgba(255,43,135,.35),0_20px_40px_-16px_rgba(255,43,135,.25)]
+                           motion-reduce:transition-none"
+              >
+                <div className="relative aspect-[16/10] w-full bg-black/30">
+                  {imgSrc ? (
+                    <img
+                      src={imgSrc}
+                      alt={g.title || "Partida"}
+                      loading="lazy"
+                      width={1280}
+                      height={800}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full grid place-items-center opacity-60 text-xs">
+                      Sem imagem
+                    </div>
+                  )}
+                  {/* overlay de degradê sutil no hover */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
                 </div>
-              </div>
-            </article>
-          ))}
+
+                <div className="p-3">
+                  <h3 className="font-semibold text-base truncate">{g.title}</h3>
+                  <p className="text-xs opacity-80 mt-1">
+                    {g.arena} • {g.city}
+                  </p>
+                  <p className="text-xs opacity-80">⏰ {g.date} • {g.time}</p>
+                  {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
+
+                  <div className="mt-2 flex gap-2">
+                    <button
+                      className="btn px-3 py-1.5 text-sm"
+                      onClick={() => toast.success("Inscrição enviada!")}
+                    >
+                      Quero jogar!
+                    </button>
+                    <button className="btn-outline px-3 py-1.5 text-sm">
+                      Detalhes
+                    </button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
 

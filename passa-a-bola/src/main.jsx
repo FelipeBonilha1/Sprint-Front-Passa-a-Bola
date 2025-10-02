@@ -31,8 +31,8 @@ const router = createBrowserRouter([
       { path: "/perto", element: <Nearby /> },
       { path: "/historico", element: <History /> },
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/perfil", element: <RequireAuth><Profile /></RequireAuth> },
-      { path: "/publicar", element: <RequireAuth><Publish /></RequireAuth> },
+      { path: "/perfil", element: <Profile /> },
+      { path: "/publicar", element: <Publish /> },
     ],
   },
 ]);

@@ -37,10 +37,10 @@ export default function Shell() {
       <AccessibilityBar />
       <Toaster />
 
-      {/* HEADER (deslocado 40px para não colidir com a top bar) */}
+      {/* HEADER */}
       <header className="sticky top-[40px] z-40 backdrop-blur supports-[backdrop-filter]:bg-black/40 border-b border-white/10">
         <div className="relative mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
-          {/* Logo / Brand */}
+          {/* Logo */}
           <NavLink to="/" className="flex items-center gap-2 whitespace-nowrap">
             <img src="/images/imagem6.png" alt="Passa a Bola" className="w-8 h-8 rounded-full" />
             <span
@@ -51,7 +51,7 @@ export default function Shell() {
             </span>
           </NavLink>
 
-          {/* Navegação central (apenas DESKTOP) em “cápsula” */}
+          {/* Navegação central  */}
           <nav className="hidden md:flex flex-1 justify-center items-center">
             <div className="rounded-2xl bg-white/5 px-2 py-1 flex items-center gap-1">
               <LinkTop to="/feed">Feed</LinkTop>

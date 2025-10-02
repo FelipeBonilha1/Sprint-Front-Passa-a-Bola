@@ -8,7 +8,7 @@ import Shell from "./ui/Shell.jsx";
 import AppLoader from "./components/AppLoader.jsx";
 import BootSplash from "./components/BootSplash.jsx";
 
-// --- suas páginas lazy (como já deixei antes) ---
+
 const Home      = lazy(() => import("./pages/home.jsx"));
 const Login     = lazy(() => import("./pages/Login.jsx"));
 const Profile   = lazy(() => import("./pages/Profile.jsx"));

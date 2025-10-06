@@ -3,6 +3,14 @@ import { NavLink } from "react-router-dom";
 import { Api } from "../services/api";
 import PublishModal from "../features/publicar/PublishModal";
 import { toast } from "../lib/toast";
+import RateModal from "../features/publicar/avaliacoes/RateModal";
+
+const PLACEHOLDERS = [
+  "/images/imagem1.jpg",
+  "/images/imagem2.jpg",
+  "/images/imagem3.jpg",
+  
+];
 
 export default function Feed() {
   const [games, setGames] = useState([]);
@@ -10,8 +18,10 @@ export default function Feed() {
   const [err, setErr] = useState(null);
   const [openPublish, setOpenPublish] = useState(false);
   const [showFab, setShowFab] = useState(true);
+  const [openRate, setOpenRate] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
 
-  // direção do scroll (mostra FAB quando sobe)
+  // mostra FAB quando sobe a página
   useEffect(() => {
     let last = window.scrollY;
     const onScroll = () => {
@@ -23,17 +33,34 @@ export default function Feed() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // carrega jogos
   useEffect(() => {
     let alive = true;
     setLoading(true);
     Api.listGames()
-      .then((data) => { if (alive) setGames(data || []); })
-      .catch((e) => { if (alive) setErr(e?.message || "Falha ao carregar"); })
-      .finally(() => { if (alive) setLoading(false); });
-    return () => { alive = false; };
+      .then((data) => {
+        if (!alive) return;
+        const list = (data || []).map((g, i) => ({
+          ...g,
+          // se não vier imagem da API, usa placeholder
+          image: g.image || PLACEHOLDERS[i % PLACEHOLDERS.length],
+        }));
+        setGames(list);
+      })
+      .catch((e) => {
+        if (alive) setErr(e?.message || "Falha ao carregar");
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
 
+  // publicar novo jogo -> garante imagem fixa
   function handleAddGame(payload) {
+    const idx = Math.floor(Math.random() * PLACEHOLDERS.length);
     const mapped = {
       id: crypto?.randomUUID?.() || Date.now(),
       title: payload.titulo,
@@ -42,20 +69,26 @@ export default function Feed() {
       slots: payload.vagas,
       date: payload.data,
       time: payload.hora,
-      image: null,
+      image: PLACEHOLDERS[idx], // 👈 adiciona foto fixa
     };
     setGames((s) => [mapped, ...s]);
     toast.success("Partida publicada!");
   }
 
+  function handleSubmitRating(form) {
+    console.log("rating-submitted", { gameId: selectedGame?.id, ...form });
+    toast.success("Avaliação enviada! Obrigado por avaliar sua partida.");
+    setOpenRate(false);
+    setSelectedGame(null);
+  }
+
   return (
     <section>
-      {/* Header responsivo */}
+      {/* Header */}
       <div className="mb-4">
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-2xl sm:text-3xl font-extrabold">Jogos públicos</h1>
 
-          {/* Ações — DESKTOP */}
           <div className="hidden sm:flex items-center gap-3">
             <NavLink
               to="/buscar"
@@ -69,7 +102,6 @@ export default function Feed() {
           </div>
         </div>
 
-        {/* Ações — MOBILE */}
         <div className="mt-3 sm:hidden grid grid-cols-2 gap-2">
           <NavLink to="/buscar" className="btn-outline w-full py-2 text-sm text-center">
             Filtrar
@@ -102,60 +134,59 @@ export default function Feed() {
         <p className="opacity-70">Nenhum jogo no momento.</p>
       )}
 
-      {/* Lista (cards menores + profundidade/hover) */}
+      {/* Lista de jogos */}
       {!loading && !err && games.length > 0 && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {games.map((g) => (
-            <article
-              key={g.id ?? g.title}
-              className="group rounded-xl overflow-hidden card transition
-                         ring-1 ring-white/10 hover:ring-[color:var(--pb-accent)]/40
-                         hover:shadow-[0_0_0_1px_rgba(255,43,135,.35),0_20px_40px_-16px_rgba(255,43,135,.25)]
-                         motion-reduce:transition-none"
-            >
-              <div className="relative aspect-[16/10] w-full bg-black/30">
-                {g.image ? (
+          {games.map((g, idx) => {
+            const cover = g.image || PLACEHOLDERS[idx % PLACEHOLDERS.length];
+            return (
+              <article
+                key={g.id ?? g.title}
+                className="group rounded-xl overflow-hidden card transition
+                           ring-1 ring-white/10 hover:ring-[color:var(--pb-accent)]/40
+                           hover:shadow-[0_0_0_1px_rgba(255,43,135,.35),0_20px_40px_-16px_rgba(255,43,135,.25)]"
+              >
+                <div className="relative aspect-[16/10] w-full bg-black/30">
                   <img
-                    src={g.image}
+                    src={cover}
                     alt={g.title}
                     loading="lazy"
-                    width={1280}
-                    height={800}
                     className="w-full h-full object-cover"
                   />
-                ) : (
-                  <div className="w-full h-full grid place-items-center opacity-60 text-xs">
-                    Sem imagem
-                  </div>
-                )}
-                {/* overlay de degradê sutil no hover */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              </div>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                </div>
 
-              <div className="p-3">
-                <h3 className="font-semibold text-base truncate">{g.title}</h3>
-                <p className="text-xs opacity-80 mt-1">{g.arena} • {g.city}</p>
-                <p className="text-xs opacity-80">⏰ {g.date} • {g.time}</p>
-                {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
+                <div className="p-3">
+                  <h3 className="font-semibold text-base truncate">{g.title}</h3>
+                  <p className="text-xs opacity-80 mt-1">{g.arena} • {g.city}</p>
+                  <p className="text-xs opacity-80">⏰ {g.date} • {g.time}</p>
+                  {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
 
-                <div className="mt-2 flex gap-2">
-                  <button
-                    className="btn px-3 py-1.5 text-sm"
-                    onClick={() => toast.success("Inscrição enviada!")}
-                  >
-                    Quero jogar!
-                  </button>
-                  <button className="btn-outline px-3 py-1.5 text-sm">
-                    Detalhes
-                  </button>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button
+                      className="btn px-3 py-1.5 text-sm"
+                      onClick={() => toast.success("Inscrição enviada!")}
+                    >
+                      Quero jogar!
+                    </button>
+                    <button className="btn-outline px-3 py-1.5 text-sm">Detalhes</button>
+                    <button
+                      className="btn-outline px-3 py-1.5 text-sm"
+                      onClick={() => {
+                        setSelectedGame(g);
+                        setOpenRate(true);
+                      }}
+                    >
+                      Avaliar
+                    </button>
                 </div>
               </div>
             </article>
-          ))}
+          )})}
         </div>
       )}
 
-      {/* FAB móvel (+ Publicar) */}
+      {/* FAB (mobile) */}
       {showFab && (
         <button
           onClick={() => setOpenPublish(true)}
@@ -174,6 +205,17 @@ export default function Feed() {
         open={openPublish}
         onClose={() => setOpenPublish(false)}
         onSubmit={handleAddGame}
+      />
+
+      {/* Modal de avaliação */}
+      <RateModal
+        open={openRate}
+        game={selectedGame}
+        onClose={() => {
+          setOpenRate(false);
+          setSelectedGame(null);
+        }}
+        onSubmit={handleSubmitRating}
       />
     </section>
   );

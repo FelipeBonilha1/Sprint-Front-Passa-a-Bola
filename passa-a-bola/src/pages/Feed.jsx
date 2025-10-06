@@ -3,16 +3,13 @@ import { NavLink } from "react-router-dom";
 import { Api } from "../services/api";
 import PublishModal from "../features/publicar/PublishModal";
 import { toast } from "../lib/toast";
-import RateModal from "../features/avaliacoes/RateModal";
+import RateModal from "../features/publicar/avaliacoes/RateModal";
 
-// 👇 coloque esses arquivos em /public/images/jogos/ (ou ajuste os caminhos)
 const PLACEHOLDERS = [
-  "/images/jogos/jogo-1.jpg",
-  "/images/jogos/jogo-2.jpg",
-  "/images/jogos/jogo-3.jpg",
-  "/images/jogos/jogo-4.jpg",
-  "/images/jogos/jogo-5.jpg",
-  "/images/jogos/jogo-6.jpg",
+  "/images/fut1.jpg",
+  "/images/fut2.jpg",
+  "/images/fut3.jpg",
+ 
 ];
 
 export default function Feed() {

@@ -10,16 +10,31 @@ const LinkTop = ({ to, children }) => (
     to={to}
     className={({ isActive }) =>
       [
-        "px-3 py-1.5 rounded-xl text-sm transition-colors",
-        "hover:bg-white/5 hover:text-white",
+        // base + responsivo + peso
+        "group px-3 py-1.5 rounded-xl text-sm md:text-base lg:text-lg font-medium transition-colors relative",
+        // foco/a11y
         "focus-visible:outline-2 focus-visible:outline-[color:var(--pb-accent)]",
+        // hover rosa
+        "hover:text-[color:var(--pb-accent)] hover:bg-[color:var(--pb-accent)]/10",
+        // ativo vs inativo
         isActive
           ? "bg-[color:var(--pb-accent)]/15 text-[color:var(--pb-accent)] ring-1 ring-[color:var(--pb-accent)]/30"
           : "text-white/80",
       ].join(" ")
     }
   >
-    {children}
+    {/* texto + underline animado (e fixo quando ativo) */}
+    <span className="relative inline-flex items-center">
+      {children}
+      <span
+        aria-hidden
+        className={[
+          "pointer-events-none absolute -bottom-1 left-0 h-0.5 bg-[color:var(--pb-accent)]",
+          "transition-all duration-300 ease-out rounded-full",
+          "w-0 group-hover:w-full group-aria-[current=page]:w-full",
+        ].join(" ")}
+      />
+    </span>
   </NavLink>
 );
 
@@ -37,12 +52,12 @@ export default function Shell() {
       <AccessibilityBar />
       <Toaster />
 
-      {/* HEADER (deslocado 40px para não colidir com a top bar) */}
+      {/* HEADER */}
       <header className="sticky top-[40px] z-40 backdrop-blur supports-[backdrop-filter]:bg-black/40 border-b border-white/10">
         <div className="relative mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
-          {/* Logo / Brand */}
+          {/* Logo  */}
           <NavLink to="/" className="flex items-center gap-2 whitespace-nowrap">
-            <img src="/images/imagem6.png" alt="Passa a Bola" className="w-8 h-8 rounded-full" />
+            <img src="/images/imagem6.png" alt="Passa a Bola" className="w-10 h-10 rounded-full" />
             <span
               className="font-semibold tracking-tight bg-clip-text text-transparent
                          bg-gradient-to-r from-white to-[color:var(--pb-accent)]/80"
@@ -51,9 +66,9 @@ export default function Shell() {
             </span>
           </NavLink>
 
-          {/* Navegação central (apenas DESKTOP) em “cápsula” */}
+          {/* Navegação central  */}
           <nav className="hidden md:flex flex-1 justify-center items-center">
-            <div className="rounded-2xl bg-white/5 px-2 py-1 flex items-center gap-1">
+            <div className="rounded-2xl bg-white/5 px-3 py-1 flex items-center gap-3">
               <LinkTop to="/feed">Feed</LinkTop>
               <LinkTop to="/buscar">Buscar</LinkTop>
               <LinkTop to="/publicar">Publicar</LinkTop>
@@ -62,19 +77,19 @@ export default function Shell() {
             </div>
           </nav>
 
-          {/* Entrar só no DESKTOP */}
+          {/* Entrar */}
           <div className="hidden md:block">
             <NavLink to="/login" className="btn">
               Entrar
             </NavLink>
           </div>
 
-          {/* Menu hambúrguer só no MOBILE */}
+          {/* Menu hambúrguer (mobile) */}
           <div className="flex items-center gap-2 md:hidden">
             <MobileMenu />
           </div>
 
-          {/* Glow line (acabamento) */}
+          {/* Glow line */}
           <span
             className="pointer-events-none absolute inset-x-0 -bottom-[1px] h-[1px]
                        bg-gradient-to-r from-transparent via-[color:var(--pb-accent)] to-transparent opacity-60"
@@ -82,7 +97,7 @@ export default function Shell() {
         </div>
       </header>
 
-      {/* CONTEÚDO (id="main" para o skip link da barra de acessibilidade) */}
+      {/* CONTEÚDO */}
       <main id="main" className="mx-auto max-w-6xl px-4 pt-8 pb-24">
         <Suspense fallback={<AppLoader text="Carregando página…" />}>
           <Outlet />

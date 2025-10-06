@@ -132,3 +132,46 @@ html { font-size: calc(16px * var(--font-scale, 1)); }
   background: linear-gradient(180deg, var(--pb-primary) 0%, #7a3dff 100%);
   border-radius: 999px;
 }
+
+/* ========== THEME: LIGHT (paleta da imagem) ========== */
+/* Ativado quando <html data-theme="light"> */
+:root[data-theme="light"]{
+  /* Fundo principal (use #FFFFFF se quiser branco puro) */
+  --pb-bg: #FAFAFA;
+
+  /* Tipografia */
+  --pb-text: #1C1C1C;            /* primário */
+  /* (secundário só se precisar: #4A4A4A) */
+
+  /* Marca */
+  --pb-primary: #FF4DA6;         /* destaque */
+  --pb-accent:  #FF85C1;         /* interação/hover */
+
+  /* Superfície/Cartões/Bordas */
+  --pb-card:   #FDF6FA;          /* cards/sections */
+  --pb-border: #E6E6E6;          /* divisórias sutis */
+}
+
+/* Ajustes visuais específicos no claro */
+:root[data-theme="light"] body{
+  background: var(--pb-bg);
+  color: var(--pb-text);
+}
+:root[data-theme="light"] .card{
+  background: var(--pb-card);
+  border-color: var(--pb-border) !important;
+}
+:root[data-theme="light"] .btn{
+  /* sombra um pouco mais visível no claro */
+  box-shadow: 0 10px 28px -14px color-mix(in oklab, var(--pb-primary) 50%, transparent);
+}
+:root[data-theme="light"] .btn-outline{
+  border-color: var(--pb-border);
+  color: var(--pb-text);
+}
+:root[data-theme="light"] .btn-outline:hover{
+  border-color: var(--pb-primary);
+  color: var(--pb-primary);
+  background: #ffffff;
+}
+

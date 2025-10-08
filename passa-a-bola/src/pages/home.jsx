@@ -14,15 +14,15 @@ export default function Home() {
       {/* HERO */}
       <section aria-labelledby="hero-title" className="relative">
         <div className="mx-auto grid max-w-6xl grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Visual mock */}
+          {/* Visual */}
           <div className="order-2 md:order-1">
             <div className="card overflow-hidden p-3">
               <div className="aspect-[5/4] w-full rounded-xl bg-[color:var(--pb-bg)]">
                 <img
-                   src="/images/imagem4.jpg"
-                   alt="Imagem de destaque do projeto Passa a Bola"
-                   className="w-full h-full object-cover rounded-xl"
-                   />
+                  src="/images/imagem4.jpg"
+                  alt="Atletas se preparando para uma partida de futebol feminino — Passa a Bola"
+                  className="w-full h-full object-cover rounded-xl"
+                />
               </div>
             </div>
           </div>
@@ -35,25 +35,25 @@ export default function Home() {
             </p>
 
             <h1 id="hero-title" className="text-4xl/tight sm:text-5xl/tight font-extrabold">
-              Conectando quem tem com quem precisa.
-              <span className="block" style={{ color: "var(--pb-primary)" }}>Esporte transformando realidades</span>
+              Do campo à conquista o jogo<span style={{ color: "var(--pb-primary)" }}> começa aqui </span>
             </h1>
 
             <p className="mt-4 text-[17px] opacity-90 max-w-prose">
-              O Passa a Bola facilita o encontro entre doadores de materiais esportivos e projetos/ONGs que precisam,
-              garantindo transparência, rastreio e impacto social mensurável.
+              O Passa a Bola facilita a organização e a descoberta de <strong>jogos de futebol feminino</strong>. 
+              Crie partidas em minutos, defina nível, posições e vagas, confirme atletas e mantenha o foco em 
+              <strong> segurança</strong>, <strong>fair play</strong> e <strong>visibilidade</strong> para o feminino.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <a className="btn" href="/feed">Ver jogos</a>
-              <a className="btn-outline" href="/publicar">Publicar partida</a>
+              <a className="btn" href="/feed">Ver jogos femininos</a>
+              <a className="btn-outline" href="/publicar">Criar jogo</a>
             </div>
 
             <dl className="mt-8 grid grid-cols-3 gap-3 max-w-md">
               {[
-                ["Entidades", "10+"],
-                ["Itens", "300+"],
-                ["Jovens", "200+"],
+                ["Jogos femininos", "48"],
+                ["Organizadoras", "22"],
+                ["Avaliações", "612"],
               ].map(([label, value]) => (
                 <div key={label} className="card px-4 py-3 rounded-xl">
                   <dt className="text-xs opacity-70">{label}</dt>
@@ -69,16 +69,18 @@ export default function Home() {
       <section id="sobre" className="py-12 md:py-16">
         <div className="mx-auto max-w-6xl grid md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-2xl font-bold">Sobre o projeto</h2>
+            <h2 className="text-2xl font-bold">Feito para o futebol feminino</h2>
             <p className="mt-3 opacity-90">
-              A plataforma lista demandas (tamanhos de chuteira, bolas, coletes, redes etc.), permite match inteligente e
-              acompanha a entrega e o impacto de forma transparente.
+              Centralizamos a agenda do feminino: <strong>organizadoras</strong> criam jogos com regras claras, 
+              <strong> atletas</strong> encontram partidas por nível, posição e localização, e todas avaliam a experiência. 
+              Assim, a comunidade cresce com dados de <strong>reputação</strong> e boas práticas de <strong>segurança</strong>.
             </p>
             <ul className="mt-4 space-y-2">
               {[
-                "Inclusão social por meio do esporte",
-                "Transparência nas doações e no impacto",
-                "Cadastro simples de pedidos e doações",
+                "Filtros pensados no feminino: nível, posição (G, Z, LA/LD, ME, ATA), local e horário",
+                "Publicação rápida com vagas por posição, taxa (se houver) e regras de jogo",
+                "Chat do jogo: combine uniforme, chegada, caronas e material",
+                "Reputação transparente: organização, fair play, estrutura e segurança",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <IconCheck className="mt-0.5 text-[color:var(--pb-accent)]" />
@@ -90,10 +92,10 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              ["Cadastro de demandas", "Entidades criam pedidos detalhados (quantidade, tamanho, urgência)."],
-              ["Match com doadores", "Doadores encontram pedidos compatíveis e confirmam doação."],
-              ["Entrega e validação", "Logística combinada, entrega confirmada e impacto registrado."],
-              ["Métricas públicas", "Indicadores de impacto visíveis para a comunidade."],
+              ["Descubra e confirme", "Veja partidas femininas próximas, com nível indicado e vagas por posição. Confirme presença em um toque."],
+              ["Organize em 1 minuto", "Defina local, vagas por posição, nível e regras (tempo, contato, goleiras). Acompanhe confirmações em tempo real."],
+              ["Avalie e dê visibilidade", "Avalie organização, fair play e segurança. Quanto mais jogos, mais destaque para o feminino na sua região."],
+              ["Ambiente seguro", "Regras claras, denúncias moderadas e sinalização de condutas inadequadas para proteger a comunidade feminina."],
             ].map(([title, desc]) => (
               <article key={title} className="card p-5 rounded-2xl">
                 <h3 className="font-semibold">{title}</h3>
@@ -108,8 +110,11 @@ export default function Home() {
       <section id="contato" className="py-12 md:py-16">
         <div className="mx-auto max-w-6xl grid md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-2xl font-bold">Entre em contato</h2>
-            <p className="mt-2 opacity-90">Quer participar do piloto, apoiar o projeto ou tirar dúvidas?</p>
+            <h2 className="text-2xl font-bold">Quer fortalecer o feminino com a gente?</h2>
+            <p className="mt-2 opacity-90">
+              Participe do piloto, traga seu time, organize jogos na sua região ou envie melhorias. Vamos dar mais 
+              <strong>espaço e estrutura</strong> para o futebol feminino.
+            </p>
           </div>
 
           <form

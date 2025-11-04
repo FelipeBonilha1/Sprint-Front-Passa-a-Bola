@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Api } from "../services/api";
+// import { Api } from "../services/api"; // ❌ não vamos usar mais aqui
 import PublishModal from "../features/publicar/PublishModal";
 import { toast } from "../lib/toast";
 import RateModal from "../features/publicar/avaliacoes/RateModal";
 
-const PLACEHOLDERS = [
-  "/images/fut1.jpg",
-  "/images/fut2.jpg",
-  "/images/fut3.jpg",
- 
-];
+const PLACEHOLDERS = ["/images/fut1.jpg", "/images/fut2.jpg", "/images/fut3.jpg"];
+
+// Base da API: usa VITE_API_URL ou cai pra /api (que o Vite proxia p/ 3000)
+const API_BASE = (import.meta.env.VITE_API_URL ?? "/api").replace(/\/$/, "");
 
 export default function Feed() {
   const [games, setGames] = useState([]);
@@ -37,22 +35,35 @@ export default function Feed() {
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    Api.listGames()
-      .then((data) => {
+
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/games`, {
+          headers: { "content-type": "application/json" },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} ao buscar /games`);
+        }
+
+        const data = await res.json();
         if (!alive) return;
+
         const list = (data || []).map((g, i) => ({
           ...g,
           // se não vier imagem da API, usa placeholder
           image: g.image || PLACEHOLDERS[i % PLACEHOLDERS.length],
         }));
+
         setGames(list);
-      })
-      .catch((e) => {
+        setErr(null);
+      } catch (e) {
         if (alive) setErr(e?.message || "Falha ao carregar");
-      })
-      .finally(() => {
+      } finally {
         if (alive) setLoading(false);
-      });
+      }
+    })();
+
     return () => {
       alive = false;
     };
@@ -69,7 +80,7 @@ export default function Feed() {
       slots: payload.vagas,
       date: payload.data,
       time: payload.hora,
-      image: PLACEHOLDERS[idx], // 👈 adiciona foto fixa
+      image: PLACEHOLDERS[idx], // 👈 foto fixa
     };
     setGames((s) => [mapped, ...s]);
     toast.success("Partida publicada!");
@@ -158,7 +169,9 @@ export default function Feed() {
 
                 <div className="p-3">
                   <h3 className="font-semibold text-base truncate">{g.title}</h3>
-                  <p className="text-xs opacity-80 mt-1">{g.arena} • {g.city}</p>
+                  <p className="text-xs opacity-80 mt-1">
+                    {g.arena} • {g.city}
+                  </p>
                   <p className="text-xs opacity-80">⏰ {g.date} • {g.time}</p>
                   {g.slots && <p className="text-xs opacity-80">👥 {g.slots} vagas</p>}
 
@@ -179,10 +192,11 @@ export default function Feed() {
                     >
                       Avaliar
                     </button>
+                  </div>
                 </div>
-              </div>
-            </article>
-          )})}
+              </article>
+            );
+          })}
         </div>
       )}
 
